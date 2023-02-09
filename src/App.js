@@ -9,17 +9,26 @@ import Profile from "./pages/users/Profile";
 import AboutUser from "./pages/users/AboutUser";
 import { Navbar } from "react-bootstrap";
 import CustomNavbar from "./components/Navbar";
+import Contact from "./pages/contact";
+import { ToastContainer, Zoom, Flip } from "react-toastify";
+import Login from "./pages/login";
+import Register from "./pages/register";
 function App() {
   return (
     // setting up routes
 
     <BrowserRouter>
+      <ToastContainer position="bottom-center" theme="dark" draggable />
       <CustomNavbar />
       <Routes>
         <Route path="/" element={<Index />} />
         <Route path="/about" element={<About />} />
         <Route path="/services" element={<Services />} />
+        <Route path="/contact" element={<Contact />} />
         <Route path="/cart" element={<Cart />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+
         <Route path="/users" element={<Dashboard />}>
           <Route path="profile" element={<Profile />} />
           <Route path="about" element={<AboutUser />} />

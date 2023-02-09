@@ -1,32 +1,61 @@
+
+
+import Container from 'react-bootstrap/Container';
+import Nav from 'react-bootstrap/Nav';
+import Navbar from 'react-bootstrap/Navbar';
+import NavDropdown from 'react-bootstrap/NavDropdown';
+import { NavLink } from 'react-router-dom';
+import logo from "./../assets/logo.png"
+
 const CustomNavbar = () => {
     return (
+        <Navbar className='bg-navbar-color' collapseOnSelect expand="lg" bg="dark" variant="dark">
+            <Container>
 
-        <div>
-            <ul>
-                <li>
-                    <a href="/">Home</a>
-                </li>
-                <li>
-                    <a href="/about">
-                        About
-                    </a>
-                </li>
-                <li>
-                    <a href="/services">
-                        Services
-                    </a>
-                </li>
-                <li>
-                    <a href="/cart">
-                        Cart
-                    </a>
-                </li>
+                <Navbar.Brand as={NavLink} to="/">
 
-                <li>
-                    <a href="/users/profile"> User Profile</a>
-                </li>
-            </ul>
-        </div>
+                    <img alt='logo' src={logo} height={25} width={25} />
+
+                    <span className='ms-1 mt-1'>ElectroStore</span>
+
+                </Navbar.Brand>
+
+
+                <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+                <Navbar.Collapse id="responsive-navbar-nav">
+
+                    <Nav className="m-auto">
+                        <Nav.Link as={NavLink} to="/services">Features</Nav.Link>
+
+                        <NavDropdown title="Categories" id="collasible-nav-dropdown">
+
+                            <NavDropdown.Item href="#action/3.1">Branded Phones</NavDropdown.Item>
+                            <NavDropdown.Item href="#action/3.2">
+                                Smart TVs
+                            </NavDropdown.Item>
+                            <NavDropdown.Item href="#action/3.3">Laptops</NavDropdown.Item>
+                            <NavDropdown.Divider />
+                            <NavDropdown.Item href="#action/3.4">
+                                More
+                            </NavDropdown.Item>
+                        </NavDropdown>
+
+                        <Nav.Link as={NavLink} to="/about">About</Nav.Link>
+                        <Nav.Link as={NavLink} to="/contact">Contact Us</Nav.Link>
+
+
+                    </Nav>
+                    <Nav>
+                        <Nav.Link as={NavLink} to="/cart">Cart( 40 )</Nav.Link>
+                        <Nav.Link as={NavLink} to="/login" >Login</Nav.Link>
+                        <Nav.Link as={NavLink} to="/register">Signup</Nav.Link>
+
+                    </Nav>
+                </Navbar.Collapse>
+            </Container>
+        </Navbar >
+
+
     )
 }
 
