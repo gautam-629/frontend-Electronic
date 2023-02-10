@@ -287,7 +287,6 @@ const Register = () => {
                                                 className="me-2"
                                                 hidden={!loading}
                                             />
-
                                             <span hidden={!loading}>Wait...</span>
                                             <span hidden={loading}>Register</span>
 
@@ -302,6 +301,7 @@ const Register = () => {
                             </Card.Body>
 
                         </Card>
+
 
 
                     </Col>
