@@ -1,12 +1,16 @@
 import Base from "../components/Base"
 import { Alert, Button, Card, Col, Container, Form, Row } from "react-bootstrap"
-import { NavLink } from "react-router-dom"
+import { NavLink, useNavigate } from "react-router-dom"
 import logo from "../assets/logo.png"
-import { useState } from "react"
+import { useContext, useState } from "react"
 import { toast } from "react-toastify"
 import { loginUser } from "../services/user.service"
+import UserContext from "../context/user.context"
 const Login = () => {
 
+
+    const redirect = useNavigate()
+    const userContext = useContext(UserContext);
 
     let [data, setData] = useState({
         email: '',
@@ -33,6 +37,8 @@ const Login = () => {
 
         console.log(data)
 
+        //client side validations
+
         if (data.email === undefined || data.email.trim() === '') {
             toast.error("Email required !!")
             return
@@ -54,6 +60,23 @@ const Login = () => {
                     errorData: null,
                     isError: false
                 })
+
+                //redirect to dashboard page:
+                // 1. normal : normal user ke dashboard per le jana hai 
+
+
+
+                //home dashboard page
+                // / users / home
+
+                // userContext.setIsLogin(true)
+                // userContext.setUserData(data)
+                userContext.login(data)
+
+                redirect("/users/home")
+
+
+                // 2. admin : admin user dashabord per le jana hai 
             })
             .catch((error) => {
                 console.log(error)
@@ -75,6 +98,7 @@ const Login = () => {
 
             <Container>
 
+
                 <Row>
                     <Col md={{
                         span: 8,
@@ -90,6 +114,8 @@ const Login = () => {
                         }}>
 
                             <Card.Body>
+
+                                {/* {JSON.stringify(userContext)} */}
 
                                 <Container className="text-center mb-3">
                                     <img src={logo} alt="Store logo" width={80} height={80} />
