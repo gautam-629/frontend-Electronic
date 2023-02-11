@@ -6,7 +6,7 @@ import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import { NavLink } from 'react-router-dom';
-import UserContext from '../context/user.context';
+import UserContext from '../context/UserContext';
 import logo from "./../assets/logo.png"
 
 const CustomNavbar = () => {

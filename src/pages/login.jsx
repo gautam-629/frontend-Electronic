@@ -5,7 +5,7 @@ import logo from "../assets/logo.png"
 import { useContext, useState } from "react"
 import { toast } from "react-toastify"
 import { loginUser } from "../services/user.service"
-import UserContext from "../context/user.context"
+import UserContext from "../context/UserContext"
 const Login = () => {
 
 

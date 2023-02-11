@@ -1,8 +1,8 @@
 import { useContext } from "react"
 import { Col, Container, Row, Card, Button } from "react-bootstrap";
 import { Navigate, NavLink, Outlet, useNavigate } from "react-router-dom"
-import UserContext from "../../context/user.context"
-import { isLoggedIn } from "../../auth/helper.auth"
+import UserContext from "../../context/UserContext"
+import { isLoggedIn } from "../../auth/HelperAuth"
 const Dashboard = () => {
 
     const userContext = useContext(UserContext);

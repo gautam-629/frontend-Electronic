@@ -1,24 +1,24 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./App.css";
-import Index from "./pages";
-import About from "./pages/about";
-import Services from "./pages/services";
-import Cart from "./pages/cart";
-import Dashboard from "./pages/users/dashboard";
+import Index from "./pages/Index";
+import About from "./pages/About";
+import Services from "./pages/Services";
+import Cart from "./pages/Cart";
+import Dashboard from "./pages/users/Dashboard";
 import Profile from "./pages/users/Profile";
 import AboutUser from "./pages/users/AboutUser";
 import { Navbar } from "react-bootstrap";
 import CustomNavbar from "./components/Navbar";
-import Contact from "./pages/contact";
+import Contact from "./pages/Contact";
 import { ToastContainer, Zoom, Flip } from "react-toastify";
-import Login from "./pages/login";
-import Register from "./pages/register";
-import Home from "./pages/users/home";
-import UserProvider from "./context/user.provider";
-import Order from "./pages/users/order";
-import AdminDashboard from "./pages/admin/admin.dashboard";
-import AdminHome from "./pages/admin/admin.home";
-import AddProduct from "./pages/admin/add.product";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+import Home from "./pages/users/Home";
+import UserProvider from "./context/UserProvider";
+import Order from "./pages/users/Order";
+import AdminDashboard from "./pages/admin/AdminDashboard";
+import AdminHome from "./pages/admin/AdminHome";
+import AddProduct from "./pages/admin/AddProduct";
 function App() {
   return (
     // setting up routes
