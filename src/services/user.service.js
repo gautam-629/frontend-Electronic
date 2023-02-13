@@ -1,5 +1,5 @@
 // user related api calls
-import { publicAxios } from "./axios.service";
+import { privateAxios, publicAxios } from "./axios.service";
 
 //register new user
 export const registerUser = (userData) => {
@@ -15,4 +15,12 @@ export const loginUser = (loginData) => {
 
 export const getUser = (userId) => {
   return publicAxios.get(`/users/${userId}`).then((response) => response.data);
+};
+
+//update user
+
+export const updateUser = (user) => {
+  return privateAxios
+    .put(`/users/${user.userId}`, user)
+    .then((response) => response.data);
 };
