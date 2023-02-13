@@ -1,5 +1,5 @@
 import Base from "../components/Base"
-import { Alert, Button, Card, Col, Container, Form, Row } from "react-bootstrap"
+import { Alert, Button, Card, Col, Container, Form, Row, Spinner } from "react-bootstrap"
 import { NavLink, useNavigate } from "react-router-dom"
 import logo from "../assets/logo.png"
 import { useContext, useState } from "react"
@@ -28,6 +28,21 @@ const Login = () => {
             ...data,
             [property]: event.target.value
         })
+    }
+
+    const handleReset = () => {
+
+        setData({
+            email: '',
+            password: ''
+        })
+
+        setError({
+            errorData: null,
+            isError: false
+        })
+
+        setLoading(false)
     }
 
     //submit form
@@ -172,8 +187,22 @@ const Login = () => {
                                     </Container>
 
                                     <Container className="text-center">
-                                        <Button type="submit" className="" variant="success">Login</Button>
-                                        <Button className="ms-2" variant="danger">Reset</Button>
+
+                                        <Button type="submit" className="" variant="success" disabled={loading}>
+                                            <Spinner
+                                                animation="border"
+                                                size="sm"
+                                                hidden={!loading}
+                                                className={'me-2'}
+
+                                            />
+                                            <span hidden={!loading}>Please wait...</span>
+
+                                            <span hidden={loading}>  Login</span>
+
+                                        </Button>
+
+                                        <Button onClick={handleReset} className="ms-2" variant="danger">Reset</Button>
                                     </Container>
 
                                 </Form>
