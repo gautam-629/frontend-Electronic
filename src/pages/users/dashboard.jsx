@@ -13,8 +13,7 @@ const Dashboard = () => {
 
     const dashboardView = () => {
         return (<div>
-            <h1>this is user Dashboard</h1>
-
+            {/* <h1>this is user Dashboard</h1> */}
 
             {/* nested */}
 

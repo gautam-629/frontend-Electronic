@@ -12,3 +12,7 @@ export const loginUser = (loginData) => {
     .post(`/auth/login`, loginData)
     .then((response) => response.data);
 };
+
+export const getUser = (userId) => {
+  return publicAxios.get(`/users/${userId}`).then((response) => response.data);
+};

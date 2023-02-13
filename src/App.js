@@ -38,7 +38,7 @@ function App() {
 
           <Route path="/users" element={<Dashboard />}>
             <Route path="home" element={<Home />} />
-            <Route path="profile" element={<Profile />} />
+            <Route path="profile/:userId" element={<Profile />} />
             <Route path="about" element={<AboutUser />} />
             <Route path="orders" element={<Order />} />
           </Route>
