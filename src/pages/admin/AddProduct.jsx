@@ -1,9 +1,9 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Button, Card, Col, Container, Form, FormGroup, InputGroup, Row } from "react-bootstrap"
 import { toast } from "react-toastify"
-
+import { addProductImage, createProductInCategory, createProductWithOutCategory } from "../../services/product.service"
+import { getCategories } from '../../services/CategoryService'
 const AddProduct = () => {
-
 
     const [product, setProduct] = useState({
         title: '',
@@ -16,20 +16,31 @@ const AddProduct = () => {
         image: undefined,
         imagePreview: undefined
     })
+    const [categories, setCategories] = useState(undefined)
+    const [selectedCategoryId, setSelectedCategoryId] = useState("none")
+
+    useEffect(() => {
+        getCategories(0, 1000).then(data => {
+            console.log(data)
+            setCategories(data)
+
+        }).catch((error) => {
+            console.log(error);
+            toast.error("error in loading categories")
+        })
+    }, [])
+
 
     const handleFileChange = (event) => {
         if (event.target.files[0].type === 'image/png' || event.target.files[0].type == 'image/jpeg') {
             //preview show
             const reader = new FileReader()
             reader.onload = (r) => {
-
                 setProduct({
                     ...product,
                     imagePreview: r.target.result,
                     image: event.target.files[0]
                 })
-
-
             }
 
             reader.readAsDataURL(event.target.files[0])
@@ -44,6 +55,115 @@ const AddProduct = () => {
         }
     }
 
+    //submitAddProductForm
+    const submitAddProductForm = (event) => {
+        event.preventDefault()
+
+        if (product.title === undefined || product.title.trim() === '') {
+            toast.error("Title is required !!")
+            return
+        }
+
+
+        if (product.description === undefined || product.description.trim() === '') {
+            toast.error("Description is required !!")
+            return
+        }
+
+        if (product.price <= 0) {
+            toast.error("Invalid Price !!")
+            return
+        }
+
+        if (product.discountedPrice <= 0 || product.discountedPrice >= product.price) {
+            toast.error("Invalid discounted priced !!")
+            return
+        }
+
+        //validate
+
+        if (selectedCategoryId === 'none') {
+            // create product without category 
+            createProductWithOutCategory(product)
+                .then(data => {
+                    console.log(data);
+
+
+                    //image upload
+                    addProductImage(product.image, data.productId)
+                        .then(data1 => {
+                            console.log(data1)
+                            toast.success("Image uploaded")
+                            setProduct({
+                                title: '',
+                                description: '',
+                                price: 0,
+                                discountedPrice: 0,
+                                quantity: 1,
+                                live: false,
+                                stock: true,
+                                image: undefined,
+                                imagePreview: undefined
+                            })
+                        })
+                        .catch(error => {
+                            console.log(error)
+                            toast.error("Error in uploading image")
+                        })
+
+                    toast.success("Product is created !!")
+
+                })
+                .catch(error => {
+                    console.log(error)
+                    toast.error("Error in creating product !! check product details")
+                })
+
+        } else {
+
+            //create product within category
+            createProductInCategory(product, selectedCategoryId)
+                .then(data => {
+                    console.log(data);
+
+
+                    //image upload
+                    addProductImage(product.image, data.productId)
+                        .then(data1 => {
+                            console.log(data1)
+                            toast.success("Image uploaded")
+                            setProduct({
+                                title: '',
+                                description: '',
+                                price: 0,
+                                discountedPrice: 0,
+                                quantity: 1,
+                                live: false,
+                                stock: true,
+                                image: undefined,
+                                imagePreview: undefined
+                            })
+                        })
+                        .catch(error => {
+                            console.log(error)
+                            toast.error("Error in uploading image")
+                        })
+
+                    toast.success("Product is created !!")
+
+                })
+                .catch(error => {
+                    console.log(error)
+                    toast.error("Error in creating product !! check product details")
+                })
+
+        }
+
+
+
+
+    }
+
 
     const formView = () => {
         return (
@@ -53,7 +173,7 @@ const AddProduct = () => {
                     {/* {JSON.stringify(product)} */}
                     <Card.Body>
                         <h5>Add Product here </h5>
-                        <Form>
+                        <Form onSubmit={submitAddProductForm}>
 
                             {/* product title */}
                             <FormGroup className="mt-3">
@@ -120,6 +240,7 @@ const AddProduct = () => {
                                             type="number"
 
                                             placeholder="Enter here"
+                                            value={product.discountedPrice}
 
                                             onChange={(event) => {
                                                 if (event.target.value > product.price) {
@@ -144,7 +265,16 @@ const AddProduct = () => {
                             <Form.Group className="mt-3" >
 
                                 <Form.Label>Product Quantity</Form.Label>
-                                <Form.Control type="number" placeholder="Enter here" />
+                                <Form.Control
+                                    type="number"
+                                    placeholder="Enter here"
+                                    value={product.quantity}
+                                    onChange={(event) => setProduct({
+                                        ...product,
+                                        quantity: event.target.value
+                                    })}
+
+                                />
                             </Form.Group>
 
                             <Row className="mt-3 px-1">
@@ -207,8 +337,31 @@ const AddProduct = () => {
                                 </InputGroup>
                             </Form.Group>
 
+
+                            {/* {JSON.stringify(selectedCategoryId)} */}
+
+                            <Form.Group className="mt-3">
+
+                                <Form.Label >Select Category</Form.Label>
+                                <Form.Select onChange={(event) => setSelectedCategoryId(event.target.value)}>
+
+                                    <option value="none">None</option>
+                                    {
+                                        (categories) ? <>
+
+                                            {
+                                                categories.content.map(cat => <option key={cat.categoryId} value={cat.categoryId} >{cat.title}</option>)
+                                            }
+
+                                        </> : ''
+                                    }
+                                </Form.Select>
+
+
+                            </Form.Group>
+
                             <Container className="text-center mt-3">
-                                <Button variant="success" size="sm">Add Product</Button>
+                                <Button type="submit" variant="success" size="sm">Add Product</Button>
                                 <Button className="ms-1" variant="danger" size="sm">Clear Data</Button>
                             </Container>
 
