@@ -39,7 +39,7 @@ const SingleProductView = ({
             <td className="px-3 small ">{product.stock ? 'True' : 'False'}</td>
             <td className="px-3 small" >{product.category ? product.category.title : ''}</td>
             <td className="px-3 small">{formatDate(product.addedDate)} </td>
-            <td className={`px-3 small d-flex `}>
+            <td className={`px-3 small d-flex table-light `}>
                 <Button variant="danger" size="sm">
                     <MdDelete />
                 </Button>
