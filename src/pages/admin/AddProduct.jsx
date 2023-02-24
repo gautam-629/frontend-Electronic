@@ -1,8 +1,9 @@
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { Button, Card, Col, Container, Form, FormGroup, InputGroup, Row } from "react-bootstrap"
 import { toast } from "react-toastify"
 import { addProductImage, createProductInCategory, createProductWithOutCategory } from "../../services/product.service"
 import { getCategories } from '../../services/CategoryService'
+import { Editor } from '@tinymce/tinymce-react'
 const AddProduct = () => {
 
     const [product, setProduct] = useState({
@@ -18,6 +19,10 @@ const AddProduct = () => {
     })
     const [categories, setCategories] = useState(undefined)
     const [selectedCategoryId, setSelectedCategoryId] = useState("none")
+
+    //for rich text editor
+
+    const editorRef = useRef()
 
     useEffect(() => {
         getCategories(0, 1000).then(data => {
@@ -55,6 +60,28 @@ const AddProduct = () => {
         }
     }
 
+    const clearForm = () => {
+
+        editorRef.current.setContent('')
+
+        setProduct({
+            title: '',
+            description: '',
+            price: 0,
+            discountedPrice: 0,
+            quantity: 1,
+            live: false,
+            stock: true,
+            image: undefined,
+            imagePreview: undefined
+        })
+
+
+
+
+
+    }
+
     //submitAddProductForm
     const submitAddProductForm = (event) => {
         event.preventDefault()
@@ -87,6 +114,11 @@ const AddProduct = () => {
             createProductWithOutCategory(product)
                 .then(data => {
                     console.log(data);
+                    toast.success("Product is created !!")
+                    if (!product.image) {
+                        clearForm()
+                        return
+                    }
 
 
                     //image upload
@@ -94,24 +126,14 @@ const AddProduct = () => {
                         .then(data1 => {
                             console.log(data1)
                             toast.success("Image uploaded")
-                            setProduct({
-                                title: '',
-                                description: '',
-                                price: 0,
-                                discountedPrice: 0,
-                                quantity: 1,
-                                live: false,
-                                stock: true,
-                                image: undefined,
-                                imagePreview: undefined
-                            })
+                            clearForm()
                         })
                         .catch(error => {
                             console.log(error)
                             toast.error("Error in uploading image")
                         })
 
-                    toast.success("Product is created !!")
+
 
                 })
                 .catch(error => {
@@ -125,6 +147,11 @@ const AddProduct = () => {
             createProductInCategory(product, selectedCategoryId)
                 .then(data => {
                     console.log(data);
+                    toast.success("Product is created !!")
+                    if (!product.image) {
+                        clearForm()
+                        return
+                    }
 
 
                     //image upload
@@ -132,24 +159,14 @@ const AddProduct = () => {
                         .then(data1 => {
                             console.log(data1)
                             toast.success("Image uploaded")
-                            setProduct({
-                                title: '',
-                                description: '',
-                                price: 0,
-                                discountedPrice: 0,
-                                quantity: 1,
-                                live: false,
-                                stock: true,
-                                image: undefined,
-                                imagePreview: undefined
-                            })
+                            clearForm()
                         })
                         .catch(error => {
                             console.log(error)
                             toast.error("Error in uploading image")
                         })
 
-                    toast.success("Product is created !!")
+
 
                 })
                 .catch(error => {
@@ -165,9 +182,12 @@ const AddProduct = () => {
     }
 
 
+
     const formView = () => {
         return (
             <>
+
+                {/* {JSON.stringify(product)} */}
 
                 <Card className=" shadow-sm ">
                     {/* {JSON.stringify(product)} */}
@@ -195,7 +215,8 @@ const AddProduct = () => {
                             <Form.Group className="mt-3" >
 
                                 <Form.Label>Product Description</Form.Label>
-                                <Form.Control
+
+                                {/* <Form.Control
                                     as={'textarea'}
                                     rows={6}
                                     placeholder="Enter here"
@@ -206,6 +227,32 @@ const AddProduct = () => {
                                     })}
 
                                     value={product.description}
+                                /> */}
+
+                                <Editor
+
+                                    apiKey=""
+                                    onInit={(evt, editor) => editorRef.current = editor}
+                                    init={{
+                                        height: 380,
+                                        menubar: true,
+                                        plugins: [
+                                            'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'preview',
+                                            'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
+                                            'insertdatetime', 'media', 'table', 'code', 'help', 'wordcount'
+                                        ],
+                                        toolbar: 'undo redo | blocks | ' +
+                                            'bold italic forecolor | alignleft aligncenter ' +
+                                            'alignright alignjustify | bullist numlist outdent indent | ' +
+                                            'removeformat | help',
+                                        content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }'
+                                    }}
+
+                                    onEditorChange={() => setProduct({
+                                        ...product,
+                                        description: editorRef.current.getContent()
+                                    })}
+
                                 />
 
                             </Form.Group>
@@ -362,7 +409,7 @@ const AddProduct = () => {
 
                             <Container className="text-center mt-3">
                                 <Button type="submit" variant="success" size="sm">Add Product</Button>
-                                <Button className="ms-1" variant="danger" size="sm">Clear Data</Button>
+                                <Button onClick={clearForm} className="ms-1" variant="danger" size="sm">Clear Data</Button>
                             </Container>
 
                         </Form>
