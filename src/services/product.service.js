@@ -37,3 +37,10 @@ export const getAllProducts = (
     )
     .then((response) => response.data);
 };
+
+//delete the product
+export const deleteProduct = (productId) => {
+  return privateAxios
+    .delete(`/products/${productId}`)
+    .then((response) => response.data);
+};
