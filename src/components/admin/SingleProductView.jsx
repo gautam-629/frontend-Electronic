@@ -1,15 +1,20 @@
-import { Button } from "react-bootstrap"
+import { Button, Modal } from "react-bootstrap"
 import { MdDelete } from 'react-icons/md'
 import { GrFormView } from 'react-icons/gr'
 import { BsFillPencilFill } from 'react-icons/bs'
 import Swal from "sweetalert2"
 import { toast } from "react-toastify"
 import { deleteProduct } from "../../services/product.service"
+import { useState } from "react"
 const SingleProductView = ({
     index,
     product,
-    updateProductList
+    updateProductList,
+    openProductViewModal,
+    openEditProductModel
 }) => {
+
+
 
     const formatDate = (time) => {
         return new Date(time).toLocaleDateString()
@@ -65,29 +70,38 @@ const SingleProductView = ({
         })
     }
 
+
+
     return (
         <tr className={getBackgroundForProduct()}>
             <td className="px-3 small"> {index + 1}</td>
             <td className="px-3 small" >{product.title}</td>
             <td className="px-3 small">{product.quantity}</td>
-            <td className="px-3 small">{product.price}</td>
-            <td className="px-3 small">{product.discountedPrice}</td>
+            <td className="px-3 small">{product.price}₹</td>
+            <td className="px-3 small">{product.discountedPrice}₹</td>
             <td className={`px-3 small `}>  {product.live ? 'True' : 'False'}</td>
             <td className="px-3 small ">{product.stock ? 'True' : 'False'}</td>
             <td className="px-3 small" >{product.category ? product.category.title : ' '}</td>
             <td className="px-3 small">{formatDate(product.addedDate)} </td>
             <td className={`px-3 small d-flex table-light `}>
+
+                {/* delete button */}
                 <Button variant="danger" onClick={(event) => deleteProductLocal(product.productId)} size="sm">
                     <MdDelete />
                 </Button>
-                <Button className="ms-2" variant="warning" size="sm">
+                {/* view button */}
+                <Button className="ms-2" onClick={(event) => openProductViewModal(event, product)} variant="warning" size="sm">
                     <GrFormView />
                 </Button>
-                <Button className="ms-2" variant="dark" size="sm">
+                {/* update button */}
+                <Button onClick={(event) => openEditProductModel(event, product)} className="ms-2" variant="dark" size="sm">
                     <BsFillPencilFill />
                 </Button>
             </td>
+
         </tr>
+
+
     )
 }
 
