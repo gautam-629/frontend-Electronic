@@ -3,14 +3,39 @@ import { useEffect, useState } from "react"
 import { toast } from "react-toastify"
 import SingleProductView from "../../components/admin/SingleProductView"
 import { getProductImageUrl, PRODUCT_PAGE_SIZE } from "../../services/helper.service"
-import { getAllProducts } from "../../services/product.service"
-import { Container, Row, Col, Table, Button, Card, Form, Pagination, Modal } from 'react-bootstrap'
+import { addProductImage, getAllProducts, searchProduct, udpateProductCategory, updateProduct } from "../../services/product.service"
+import { Container, Row, Col, Table, Button, Card, Form, Pagination, Modal, FormGroup, InputGroup } from 'react-bootstrap'
 import defaultImage from '../../assets/default_profile.jpg'
 import ShowHtml from "../../components/ShowHtml"
+import { Editor } from "@tinymce/tinymce-react"
+import { useRef } from "react"
+import { getCategories } from "../../services/CategoryService"
+
 const ViewProducts = () => {
 
+    const [previousProducts, setPreviousProducts] = useState(undefined)
     const [products, setProducts] = useState(undefined)
     const [currentProduct, setCurrentProduct] = useState(undefined)
+    const editorRef = useRef()
+    const [categories, setCategories] = useState(undefined)
+    const [imageUpdate, setImageUpdate] = useState({
+        image: undefined,
+        imagePreview: undefined
+    })
+    const [categoryChangeId, setCategoryChangeId] = useState('')
+
+    const [searchQuery, setSearchQuery] = useState('')
+
+    useEffect(() => {
+        getCategories(0, 10000)
+            .then(data => {
+                setCategories({ ...data })
+                console.log(data)
+            })
+            .catch(error => {
+                console.log(error)
+            })
+    }, [])
 
     // view product state variables
     const [show, setShow] = useState(false);
@@ -68,6 +93,139 @@ const ViewProducts = () => {
 
     }
 
+
+    // handleUpdateFormSubmit
+
+    const handleUpdateFormSubmit = (event) => {
+        event.preventDefault()
+        console.log(currentProduct)
+        if (currentProduct.title === '') {
+            toast.error("title required")
+            return
+        }
+
+        //form submit api call
+
+        updateProduct(currentProduct, currentProduct.productId)
+            .then(data => {
+                console.log(data)
+
+
+                toast.success("Detail updated ", {
+                    position: "top-right"
+                })
+
+                // update image also...
+
+                if (imageUpdate.image && imageUpdate.imagePreview) {
+                    addProductImage(imageUpdate.image, currentProduct.productId)
+                        .then(imageData => {
+                            console.log(imageData)
+                            setCurrentProduct({
+                                ...currentProduct,
+                                productImageName: imageData.imageName
+                            })
+                            toast.success("image updaed", {
+                                position: "top-right"
+                            })
+
+                            setImageUpdate({
+                                image: undefined,
+                                imagePreview: undefined
+                            })
+                        }).catch(
+                            error => {
+                                console.log(error)
+                                toast.error("Error in updating image", {
+                                    position: "top-right"
+                                })
+                            }
+                        )
+                }
+
+                // category update:
+                if (categoryChangeId === 'none' || categoryChangeId === currentProduct.category?.categoryId) {
+
+                } else {
+
+                    udpateProductCategory(categoryChangeId, currentProduct.productId)
+                        .then(catData => {
+                            console.log(catData)
+                            toast.success("Category Updated ", {
+                                position: "top-right"
+                            })
+                            setCurrentProduct({
+                                ...currentProduct,
+                                category: catData.category
+                            })
+
+
+                            const newArray = products.content.map(p => {
+                                if (p.productId === currentProduct.productId)
+                                    return catData
+                                return p
+                            })
+
+                            setProducts({
+                                ...products,
+                                content: newArray
+                            })
+
+
+
+                        })
+                        .
+                        catch(error => {
+                            console.log(error)
+                        })
+
+                }
+
+
+
+
+
+                const newArray = products.content.map(p => {
+                    if (p.productId === currentProduct.productId)
+                        return data
+                    return p
+                })
+
+                setProducts({
+                    ...products,
+                    content: newArray
+                })
+
+
+
+            })
+
+
+    }
+
+    //handle udpate file change
+
+    const handleFileChange = (event) => {
+        if (event.target.files[0].type === 'image/png' || event.target.files[0].type == 'image/jpeg') {
+            //preview show
+            const reader = new FileReader()
+            reader.onload = (r) => {
+                setImageUpdate({
+                    imagePreview: r.target.result,
+                    image: event.target.files[0]
+                })
+            }
+
+            reader.readAsDataURL(event.target.files[0])
+        }
+        else {
+            toast.error("Invalid File !!")
+            setImageUpdate({
+                image: undefined,
+                imagePreview: undefined
+            })
+        }
+    }
     //
     const updateProductList = (productId) => {
         const newArray = products.content.filter(p => p.productId != productId)
@@ -177,8 +335,10 @@ const ViewProducts = () => {
     }
 
 
+    //update modal
+
     const editProductModalView = () => {
-        return (
+        return currentProduct && (
             <>
 
 
@@ -186,18 +346,272 @@ const ViewProducts = () => {
                     <Modal.Header closeButton>
                         <Modal.Title>Modal heading</Modal.Title>
                     </Modal.Header>
-                    <Modal.Body>Woohoo, you're reading this text in a modal!</Modal.Body>
+                    <Modal.Body>
+
+                        {/* {JSON.stringify(currentProduct)} */}
+
+
+                        <Form onSubmit={handleUpdateFormSubmit} >
+
+                            {/* product title */}
+                            <FormGroup className="mt-3">
+                                <Form.Label>Product title</Form.Label>
+
+                                <Form.Control
+                                    type="text"
+                                    placeholder="Enter here"
+                                    value={currentProduct.title}
+                                    onChange={event => setCurrentProduct({
+                                        ...currentProduct,
+                                        title: event.target.value
+                                    })}
+
+
+                                />
+                            </FormGroup>
+
+                            {/* product description */}
+
+                            <Form.Group className="mt-3" >
+
+                                <Form.Label>Product Description</Form.Label>
+
+                                {/* <Form.Control
+                                            as={'textarea'}
+                                            rows={6}
+                                            placeholder="Enter here"
+
+                                            onChange={(event) => setProduct({
+                                                ...product,
+                                                description: event.target.value
+                                            })}
+
+                                            value={product.description}
+                                          /> */}
+
+                                <Editor
+
+                                    apiKey=""
+                                    onInit={(evt, editor) => editorRef.current = editor}
+
+                                    init={{
+                                        height: 380,
+                                        menubar: true,
+                                        plugins: [
+                                            'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'preview',
+                                            'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
+                                            'insertdatetime', 'media', 'table', 'code', 'help', 'wordcount'
+                                        ],
+                                        toolbar: 'undo redo | blocks | ' +
+                                            'bold italic forecolor | alignleft aligncenter ' +
+                                            'alignright alignjustify | bullist numlist outdent indent | ' +
+                                            'removeformat | help',
+                                        content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }'
+                                    }}
+                                    value={currentProduct.description}
+                                    onEditorChange={event => setCurrentProduct({
+                                        ...currentProduct,
+                                        description: editorRef.current.getContent()
+                                    })}
+
+
+
+                                />
+
+                            </Form.Group>
+
+                            <Row>
+                                <Col>
+                                    {/* price */}
+                                    <FormGroup className="mt-3">
+                                        <Form.Label>Price</Form.Label>
+                                        <Form.Control type="number"
+                                            placeholder="Enter here"
+                                            value={currentProduct.price}
+                                            onChange={event => setCurrentProduct({
+                                                ...currentProduct,
+                                                price: event.target.value
+                                            })}
+
+
+                                        />
+                                    </FormGroup>
+
+
+                                </Col>
+
+                                <Col>
+
+                                    {/* discounted price */}
+                                    <FormGroup className="mt-3">
+                                        <Form.Label>Discounted Price</Form.Label>
+                                        <Form.Control
+
+                                            type="number"
+
+                                            placeholder="Enter here"
+
+                                            value={currentProduct.discountedPrice}
+                                            onChange={event => setCurrentProduct({
+                                                ...currentProduct,
+                                                discountedPrice: event.target.value
+                                            })}
+
+
+
+
+                                        />
+                                    </FormGroup>
+
+                                </Col>
+                            </Row>
+
+                            {/* Product quantity */}
+
+                            <Form.Group className="mt-3" >
+
+                                <Form.Label>Product Quantity</Form.Label>
+                                <Form.Control
+                                    type="number"
+                                    placeholder="Enter here"
+                                    value={currentProduct.quantity}
+                                    onChange={event => setCurrentProduct({
+                                        ...currentProduct,
+                                        quantity: event.target.value
+                                    })}
+
+
+                                />
+                            </Form.Group>
+
+                            <Row className="mt-3 px-1">
+                                <Col>
+                                    <Form.Check
+
+                                        type="switch"
+                                        label={"Live"}
+                                        checked={currentProduct.live}
+                                        onChange={event => setCurrentProduct({
+                                            ...currentProduct,
+                                            live: !currentProduct.live
+                                        })}
+
+
+                                    />
+                                </Col>
+                                <Col>
+
+                                    <Form.Check
+                                        type="switch"
+                                        label={"Stock"}
+                                        checked={currentProduct.stock}
+                                        onChange={event => setCurrentProduct({
+                                            ...currentProduct,
+                                            stock: !currentProduct.stock
+                                        })}
+
+
+                                    />
+
+                                </Col>
+                            </Row>
+
+                            {/* product image */}
+                            <Form.Group className="my-5">
+                                <Container className="text-center  py-4 border border-2">
+                                    <p className="text-muted">Image Preview</p>
+                                    <img
+                                        className="img-fluid"
+                                        style={{
+                                            maxHeight: "250px"
+                                        }}
+                                        src={imageUpdate.imagePreview ? imageUpdate.imagePreview : getProductImageUrl(currentProduct.productId)}
+                                        alt="" />
+                                </Container>
+                                <Form.Label>Select product image</Form.Label>
+                                <InputGroup>
+                                    <Form.Control type={'file'}
+                                        onChange={(event) => handleFileChange(event)}
+
+                                    />
+
+                                    <Button
+
+                                        onClick={event => {
+                                            setImageUpdate({
+                                                imagePreview: undefined,
+                                                image: undefined
+
+                                            })
+                                        }}
+
+                                        variant="outline-secondary">Clear</Button>
+                                </InputGroup>
+                            </Form.Group>
+
+
+                            {/* {JSON.stringify(categoryChangeId)} */}
+                            <Form.Group className="mt-3">
+                                <Form.Label >Select Category</Form.Label>
+                                <Form.Select onChange={(event) => {
+                                    setCategoryChangeId(event.target.value)
+                                }} >
+                                    <option value="none">None</option>
+                                    {
+                                        categories && categories.content.map(cat => {
+                                            return (
+                                                <option selected={cat.categoryId == currentProduct.category?.categoryId} value={cat.categoryId} key={cat.categoryId}>{cat.title}</option>
+                                            )
+                                        })
+                                    }
+
+                                </Form.Select>
+
+
+                            </Form.Group>
+                            <Container className="text-center mt-3">
+                                <Button type="submit" variant="success" size="sm">Save Details</Button>
+                            </Container>
+
+                        </Form>
+
+
+                    </Modal.Body>
                     <Modal.Footer>
                         <Button variant="secondary" onClick={closeEditProductModel}>
                             Close
                         </Button>
-                        <Button variant="primary" onClick={closeEditProductModel}>
-                            Save Changes
-                        </Button>
+
                     </Modal.Footer>
                 </Modal>
             </>
         )
+    }
+
+
+    // search product
+    const searchProducts = () => {
+        if (searchQuery === undefined || searchQuery.trim() === '') {
+            return
+        }
+
+        //call server api to serach
+        searchProduct(searchQuery)
+            .then(data => {
+                if (data.content.length <= 0) {
+                    toast.info("No result found")
+                    return
+                }
+                setPreviousProducts(products)
+                setProducts(data)
+            }).catch(
+                error => {
+                    console.log(error)
+                    toast.error("Error in searching the products", {
+                        position: "top-right"
+                    })
+                }
+            )
     }
 
     ///products view
@@ -208,7 +622,25 @@ const ViewProducts = () => {
                     <h5 className="mb-3">View Products</h5>
                     <Form.Group className="mb-2">
                         <Form.Label>Search Product</Form.Label>
-                        <Form.Control type="text" placeholder="Seach here" />
+                        <InputGroup>
+                            <Form.Control
+                                onChange={(event) => {
+                                    if (event.target.value === '') {
+
+                                        if (previousProducts) {
+                                            setProducts(previousProducts)
+                                        }
+
+                                    }
+
+                                    setSearchQuery(event.target.value)
+                                }}
+
+
+                                value={searchQuery}
+                                type="text" placeholder="Seach here" />
+                            <Button onClick={searchProducts} variant="outline-secondary">Search</Button>
+                        </InputGroup>
                     </Form.Group>
                     <Table className="" bordered hover responsive size="sm"
                     >

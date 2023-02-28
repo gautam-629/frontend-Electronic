@@ -12,7 +12,7 @@ const AdminDashboard = () => {
     const dashboardView = () => {
         return (
             <div>
-                <Container className=" py-5  ">
+                <Container fluid className="px-5 py-5  ">
                     <Row>
 
                         <Col md={{

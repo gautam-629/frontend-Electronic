@@ -44,3 +44,23 @@ export const deleteProduct = (productId) => {
     .delete(`/products/${productId}`)
     .then((response) => response.data);
 };
+
+//update product service
+export const updateProduct = (product, productId) => {
+  return privateAxios
+    .put(`/products/${productId}`, product)
+    .then((response) => response.data);
+};
+
+//update the category of the product
+
+export const udpateProductCategory = (categoryId, productId) => {
+  return privateAxios
+    .put(`/categories/${categoryId}/products/${productId}`)
+    .then((res) => res.data);
+};
+
+//search product service
+export const searchProduct = (query) => {
+  return privateAxios.get(`/products/search/${query}`).then((res) => res.data);
+};
