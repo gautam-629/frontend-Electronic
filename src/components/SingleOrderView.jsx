@@ -1,9 +1,11 @@
 import { Button, Card, Col, Container, Row, Table } from "react-bootstrap"
+import { Link } from "react-router-dom"
 import { formatDate } from "../services/helper.service"
 
 const SingleOrderView = ({
     order,
-    openViewOrderModal
+    openViewOrderModal,
+    openEditOrderModal
 }) => {
 
 
@@ -17,7 +19,7 @@ const SingleOrderView = ({
                         <b>Order Id: </b>{order.orderId}
                     </Col>
                     <Col>
-                        <b>Billing Name: </b>{order.billingName}
+                        <b>Ordered By: </b><Link className="text-muted" to={`/users/profile/${order.user.userId}`}>{order.user.name}</Link>
                     </Col>
 
 
@@ -26,6 +28,15 @@ const SingleOrderView = ({
                     <Col>
                         <Table bordered striped>
                             <tbody>
+
+                                <tr>
+                                    <td>
+                                        Billing Name
+                                    </td>
+                                    <td className="fw-bold">
+                                        {order.billingName}
+                                    </td>
+                                </tr>
                                 <tr>
                                     <td>
                                         Billing Phone
@@ -75,9 +86,12 @@ const SingleOrderView = ({
 
                 </Row>
                 <Container className="text-center">
+                    <Button
+                        onClick={(event) => openEditOrderModal(event, order)}
+                        variant="danger" size='sm' className="me-2">Update</Button>
                     <Button onClick={(event) => {
                         openViewOrderModal(event, order)
-                    }} size="sm" variant="info"> View Order Details</Button>
+                    }} size="sm" variant="info"> Order Details</Button>
                 </Container>
             </Card.Body>
         </Card >
