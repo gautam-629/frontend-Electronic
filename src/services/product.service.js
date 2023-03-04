@@ -38,6 +38,20 @@ export const getAllProducts = (
     .then((response) => response.data);
 };
 
+//get all live products
+export const getAllLive = (
+  pageNumber = 0,
+  pageSize = 10,
+  sortBy = "addedDate",
+  sortDir = "asc"
+) => {
+  return privateAxios
+    .get(
+      `/products/live?pageNumber=${pageNumber}&pageSize=${pageSize}&sortBy=${sortBy}&sortDir=${sortDir}`
+    )
+    .then((response) => response.data);
+};
+
 //delete the product
 export const deleteProduct = (productId) => {
   return privateAxios
@@ -63,4 +77,25 @@ export const udpateProductCategory = (categoryId, productId) => {
 //search product service
 export const searchProduct = (query) => {
   return privateAxios.get(`/products/search/${query}`).then((res) => res.data);
+};
+
+//get single product detail
+export const getProduct = (productId) => {
+  return privateAxios.get(`/products/${productId}`).then((res) => res.data);
+};
+
+//get products of categories
+
+export const getProductsOfCategories = (
+  categoryId,
+  pageNumber = 0,
+  pageSize = 10,
+  sortBy = "addedDate",
+  sortDir = "asc"
+) => {
+  return privateAxios
+    .get(
+      `/categories/${categoryId}/products?pageNumber=${pageNumber}&pageSize=${pageSize}&sortBy=${sortBy}&sortDir=${sortDir}`
+    )
+    .then((res) => res.data);
 };

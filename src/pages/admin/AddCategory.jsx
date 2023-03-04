@@ -6,7 +6,6 @@ import { addCategory } from "../../services/CategoryService"
 
 const AddCategory = () => {
 
-
     const [category, setCategory] = useState({
         title: '',
         description: '',
@@ -14,7 +13,6 @@ const AddCategory = () => {
     })
 
     const [loading, setLoading] = useState(false)
-
     const handleFieldChange = (event, property) => {
         event.preventDefault()
         setCategory({

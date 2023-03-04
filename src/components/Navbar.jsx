@@ -53,6 +53,7 @@ const CustomNavbar = () => {
 
                     </Nav>
                     <Nav>
+                        <Nav.Link as={NavLink} to="/store">Store</Nav.Link>
                         <Nav.Link as={NavLink} to="/cart">Cart( 40 )</Nav.Link>
 
                         {
