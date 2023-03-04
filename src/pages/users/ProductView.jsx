@@ -28,6 +28,7 @@ function ProductView() {
     }
 
     const handleAddItem = (productId, quantity) => {
+
         addItem(quantity, productId, () => {
             toast.success("Product is added to card")
         })
