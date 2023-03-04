@@ -1,6 +1,11 @@
 import { async } from "q";
 import React, { useContext, useEffect, useState } from "react";
+import { Alert } from "react-bootstrap";
+import { Navigate, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
+
 import {
   addItemToCart,
   clearCart,
@@ -9,6 +14,7 @@ import {
 } from "../services/CartService";
 import CartContext from "./CartContext";
 import UserContext from "./UserContext";
+const MySwal = withReactContent(Swal);
 
 const CartProvider = ({ children }) => {
   const { isLogin, userData } = useContext(UserContext);
@@ -40,6 +46,21 @@ const CartProvider = ({ children }) => {
   //add item to cart
   const addItem = async (quantity, productId, next) => {
     try {
+      if (!isLogin) {
+        MySwal.fire({
+          title: "Not Logged In",
+          html: (
+            <>
+              <Alert className="border border-0" variant="danger">
+                Please do login to add items to cart
+              </Alert>
+            </>
+          ),
+          icon: "error",
+        }).then(() => {});
+        return;
+      }
+
       const result = await addItemToCart(
         userData.user.userId,
         productId,
