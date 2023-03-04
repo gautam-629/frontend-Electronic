@@ -6,12 +6,14 @@ import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import { NavLink } from 'react-router-dom';
+import CartContext from '../context/CartContext';
 import UserContext from '../context/UserContext';
 import logo from "./../assets/logo.png"
 
 const CustomNavbar = () => {
 
     const userContext = useContext(UserContext)
+    const { cart, setCart } = useContext(CartContext)
     const doLogout = () => {
         userContext.logout()
     }
@@ -54,7 +56,7 @@ const CustomNavbar = () => {
                     </Nav>
                     <Nav>
                         <Nav.Link as={NavLink} to="/store">Store</Nav.Link>
-                        <Nav.Link as={NavLink} to="/cart">Cart( 40 )</Nav.Link>
+                        <Nav.Link as={NavLink} to="/cart">Cart {userContext.isLogin && cart && '(' + cart.items.length + ')'} </Nav.Link>
 
                         {
                             (userContext.isLogin) ?

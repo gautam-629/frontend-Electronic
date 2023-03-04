@@ -26,7 +26,7 @@ const Base = ({
                     <h3 className="text-center">{title}</h3>
                     <p className="text-center">{description && description}</p>
 
-                    {buttonEnabled && <Button as={NavLink} to="/" variant={buttonType} >{buttonText}</Button>}
+                    {buttonEnabled && <Button as={NavLink} to={buttonLink} variant={buttonType} >{buttonText}</Button>}
 
                 </div>
 

@@ -34,6 +34,7 @@ function Index() {
       buttonEnabled={true}
       buttonText="Start Shoping "
       buttonType="primary"
+      buttonLink="/store"
     >
       <h1>Working on home page</h1>
       <p>

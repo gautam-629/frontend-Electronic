@@ -27,47 +27,50 @@ import AdminUsers from "./pages/admin/AdminUsers";
 import StorePage from "./pages/users/StorePage";
 import ProductView from "./pages/users/ProductView";
 import CategoryStorePage from "./pages/users/CategoryStorePage";
+import CartProvider from "./context/CartProvider";
 function App() {
   return (
     // setting up routes
 
     <UserProvider>
-      <BrowserRouter>
-        <ToastContainer position="bottom-center" theme="dark" draggable />
-        <CustomNavbar />
-        <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/services" element={<Services />} />
-          <Route path="/contact" element={<Contact />} />
-          <Route path="/cart" element={<Cart />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/store" element={<StorePage />} />
-          <Route path="store/products/:productId" element={<ProductView />} />
-          <Route
-            path="store/:categoryId/:categoryTitle"
-            element={<CategoryStorePage />}
-          />
+      <CartProvider>
+        <BrowserRouter>
+          <ToastContainer position="bottom-center" theme="dark" draggable />
+          <CustomNavbar />
+          <Routes>
+            <Route path="/" element={<Index />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/services" element={<Services />} />
+            <Route path="/contact" element={<Contact />} />
+            <Route path="/cart" element={<Cart />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/store" element={<StorePage />} />
+            <Route path="store/products/:productId" element={<ProductView />} />
+            <Route
+              path="store/:categoryId/:categoryTitle"
+              element={<CategoryStorePage />}
+            />
 
-          <Route path="/users" element={<Dashboard />}>
-            <Route path="home" element={<Home />} />
-            <Route path="profile/:userId" element={<Profile />} />
-            <Route path="about" element={<AboutUser />} />
-            <Route path="orders" element={<Order />} />
-          </Route>
+            <Route path="/users" element={<Dashboard />}>
+              <Route path="home" element={<Home />} />
+              <Route path="profile/:userId" element={<Profile />} />
+              <Route path="about" element={<AboutUser />} />
+              <Route path="orders" element={<Order />} />
+            </Route>
 
-          <Route path="/admin" element={<AdminDashboard />}>
-            <Route path="home" element={<AdminHome />} />
-            <Route path="add-product" element={<AddProduct />} />
-            <Route path="add-category" element={<AddCategory />} />
-            <Route path="categories" element={<ViewCategories />} />
-            <Route path="products" element={<ViewProducts />} />
-            <Route path="orders" element={<AdminOrders />} />
-            <Route path="users" element={<AdminUsers />} />
-          </Route>
-        </Routes>
-      </BrowserRouter>
+            <Route path="/admin" element={<AdminDashboard />}>
+              <Route path="home" element={<AdminHome />} />
+              <Route path="add-product" element={<AddProduct />} />
+              <Route path="add-category" element={<AddCategory />} />
+              <Route path="categories" element={<ViewCategories />} />
+              <Route path="products" element={<ViewProducts />} />
+              <Route path="orders" element={<AdminOrders />} />
+              <Route path="users" element={<AdminUsers />} />
+            </Route>
+          </Routes>
+        </BrowserRouter>
+      </CartProvider>
     </UserProvider>
   );
 }
