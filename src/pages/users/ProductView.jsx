@@ -29,6 +29,9 @@ function ProductView() {
 
     const handleAddItem = (productId, quantity) => {
 
+
+        //if the product is in stock 
+
         addItem(quantity, productId, () => {
             toast.success("Product is added to card")
         })
@@ -65,7 +68,7 @@ function ProductView() {
                                                 <b><span className='h2  ms-2'>₹{product.discountedPrice}</span></b>
                                             </Container>
                                             <Container className='d-grid mt-4'>
-                                                <Button variant='warning' size={'sm'}
+                                                <Button disabled={!product.stock} variant='warning' size={'sm'}
                                                     onClick={event => handleAddItem(product.productId, 1)}
                                                 >Add to Cart</Button>
                                                 <Button as={Link} to='/store' className='mt-2' variant='info' size={'sm'}>Go to Store</Button>
@@ -87,7 +90,7 @@ function ProductView() {
 
                 <Container className='d-grid mt-4'>
 
-                    <Button onClick={event => handleAddItem(product.productId, 1)} variant='warning' size={'sm'}>Add to Cart</Button>
+                    <Button disabled={!product.stock} onClick={event => handleAddItem(product.productId, 1)} variant='warning' size={'sm'}>Add to Cart</Button>
                     <Button as={Link} to='/store' className='mt-2' variant='info' size={'sm'}>Go to Store</Button>
                 </Container>
             </Container>

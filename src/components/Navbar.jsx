@@ -36,7 +36,7 @@ const CustomNavbar = () => {
                     <Nav className="m-auto">
                         <Nav.Link as={NavLink} to="/services">Features</Nav.Link>
 
-                        <NavDropdown title="Categories" id="collasible-nav-dropdown">
+                        {/* <NavDropdown title="Categories" id="collasible-nav-dropdown">
 
                             <NavDropdown.Item href="#action/3.1">Branded Phones</NavDropdown.Item>
                             <NavDropdown.Item href="#action/3.2">
@@ -47,7 +47,7 @@ const CustomNavbar = () => {
                             <NavDropdown.Item href="#action/3.4">
                                 More
                             </NavDropdown.Item>
-                        </NavDropdown>
+                        </NavDropdown> */}
 
                         <Nav.Link as={NavLink} to="/about">About</Nav.Link>
                         <Nav.Link as={NavLink} to="/contact">Contact Us</Nav.Link>

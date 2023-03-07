@@ -3,27 +3,70 @@ import { toast } from "react-toastify";
 import Base from "../components/Base";
 import axios from "axios";
 import Store from "../components/users/Store";
+import {
+  infoWithImageInRightSection,
+  trendingProducts,
+  infoWithImageInLeftSection,
+  contactForm,
+} from "./HomePageComponents";
+import { useState } from "react";
 function Index() {
-  function showSuccessToast() {
-    console.log("success toast");
-    // toast.success("This is success message !!");
-    toast.warn("this is error message");
-  }
-
-  const getDataFromServer = () => {
-    toast.info("Getting data from server");
-
-    axios
-      .get("http://localhost:9090/users")
-      .then((response) => {
-        console.log(response.data);
-        toast.success("request done");
-      })
-      .catch((error) => {
-        console.log(error);
-        toast.error("something went wrong");
-      });
-  };
+  const [products, setProducts] = useState([
+    {
+      addedDate: "2023-03-06T12:27:58.578Z",
+      category: {
+        categoryId: "string",
+        coverImage: "string",
+        description: "string",
+        title: "Learn Code With Durgesh",
+      },
+      description: "string",
+      discountedPrice: 5000,
+      live: true,
+      price: 6000,
+      productId: "string",
+      productImageName: "string",
+      quantity: 0,
+      stock: true,
+      title: "Product title",
+    },
+    {
+      addedDate: "2023-03-06T12:27:58.578Z",
+      category: {
+        categoryId: "string",
+        coverImage: "string",
+        description: "string",
+        title: "Learn Code With Durgesh",
+      },
+      description: "string",
+      discountedPrice: 5000,
+      live: true,
+      price: 6000,
+      productId: "string",
+      productImageName: "string",
+      quantity: 0,
+      stock: true,
+      title: "Product title",
+    },
+    {
+      addedDate: "2023-03-06T12:27:58.578Z",
+      category: {
+        categoryId: "string",
+        coverImage: "string",
+        description: "string",
+        title: "Learn Code With Durgesh",
+      },
+      description: "string",
+      discountedPrice: 5000,
+      live: true,
+      price: 6000,
+      productId: "string",
+      productImageName: "string",
+      quantity: 0,
+      stock: true,
+      title: "Product title",
+    },
+  ]);
 
   return (
     <Base
@@ -36,25 +79,32 @@ function Index() {
       buttonType="primary"
       buttonLink="/store"
     >
-      <h1>Working on home page</h1>
-      <p>
-        Lorem ipsum, dolor sit amet consectetur adipisicing elit. Temporibus
-        dolor nostrum ratione dolores eaque repellendus aut tenetur! Vero fugit
-        maxime tempore deserunt fuga commodi reprehenderit quae consequuntur eum
-        similique aut temporibus eligendi eveniet magnam natus nulla doloribus
-        corrupti est, perspiciatis saepe. Labore laborum maiores repellat minima
-        nam maxime ratione neque.
-      </p>
+      <div className="my-4">{trendingProducts(products)}</div>
+      <div style={{ margin: "100px 0px" }}>
+        {infoWithImageInRightSection(
+          "https://random.imagecdn.app/500/150",
+          "Lorem ipsum dolor sit amet.",
+          "Lorem ipsum dolor sit amet consectetur adipisicing elit. Nemo nisi assumenda asperiores repudiandae accusamus itaque ratione veritatis, inventore sunt laboriosam."
+        )}
+      </div>
+      <div style={{ margin: "100px 0px" }}>
+        {infoWithImageInLeftSection(
+          "https://random.imagecdn.app/500/150",
+          "Lorem ipsum dolor sit amet.",
+          "Lorem ipsum dolor sit amet consectetur adipisicing elit. Nemo nisi assumenda asperiores repudiandae accusamus itaque ratione veritatis, inventore sunt laboriosam."
+        )}
+      </div>
 
-      <Button variant="success" onClick={showSuccessToast}>
-        Tostify Success
-      </Button>
+      <div className="my-4">{contactForm()}</div>
 
-      <Button variant="primary" onClick={getDataFromServer}>
-        Get data from Fake API
-      </Button>
+      <div style={{ margin: "100px 0px" }}>
+        {infoWithImageInRightSection(
+          "https://random.imagecdn.app/500/150",
+          "Lorem ipsum dolor sit amet.",
+          "Lorem ipsum dolor sit amet consectetur adipisicing elit. Nemo nisi assumenda asperiores repudiandae accusamus itaque ratione veritatis, inventore sunt laboriosam."
+        )}
+      </div>
     </Base>
   );
 }
-
 export default Index;

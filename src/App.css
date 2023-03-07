@@ -53,3 +53,11 @@
   /* margin-top: 23x; */
   /* border: 1px solid #e2e2e2 !important;  */
 }
+
+.animation {
+  transition: all 100ms linear !important;
+}
+
+body {
+  background-color: #f9f7f2 !important;
+}
