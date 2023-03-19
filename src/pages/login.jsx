@@ -88,7 +88,7 @@ const Login = () => {
                 // userContext.setUserData(data)
                 userContext.login(data)
 
-                redirect("/users/home")
+                redirect("/store")
 
 
                 // 2. admin : admin user dashabord per le jana hai 

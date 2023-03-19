@@ -9,11 +9,12 @@ import { FaOpencart } from 'react-icons/fa'
 import { FaUserSecret } from 'react-icons/fa'
 import { MdDashboard } from 'react-icons/md'
 import { HiOutlineLogout } from 'react-icons/hi'
+import { RiShoppingCartFill } from 'react-icons/ri'
 import { useContext } from "react"
 import UserContext from '../../context/UserContext'
 const SideMenu = () => {
 
-    const { logout } = useContext(UserContext)
+    const { logout, userData } = useContext(UserContext)
 
     return (<>
         <ListGroup variant="flush" className="sticky-top"   >
@@ -50,7 +51,7 @@ const SideMenu = () => {
             <ListGroup.Item as={NavLink} to="/admin/orders" action>
                 <FaOpencart size={20} />
                 <span className="ms-2">
-                    Orders
+                    All Orders
                 </span>
             </ListGroup.Item>
             <ListGroup.Item as={NavLink} to="/admin/users" className="d-flex justify-content-between align-items-start" action>
@@ -65,10 +66,16 @@ const SideMenu = () => {
                 </Badge>
 
             </ListGroup.Item>
-            <ListGroup.Item as={NavLink} to="/users/home" action>
+            <ListGroup.Item as={NavLink} to={`/users/profile/${userData.user.userId}`} action>
                 <MdDashboard size={20} />
                 <span className="ms-2">
-                    Dashboard
+                    Profile
+                </span>
+            </ListGroup.Item>
+            <ListGroup.Item as={NavLink} to={`/users/orders`} action>
+                <RiShoppingCartFill size={20} />
+                <span className="ms-2">
+                    Your Orders
                 </span>
             </ListGroup.Item>
             <ListGroup.Item action onClick={(event) => {
